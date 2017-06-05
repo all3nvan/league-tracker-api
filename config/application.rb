@@ -29,5 +29,10 @@ module LeagueMatchmakingApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.generators do |g|
+      # Make UUID the primary key of tables by default in migrations
+      g.orm :active_record, primary_key_type: :uuid
+    end
   end
 end
