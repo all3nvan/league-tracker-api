@@ -16,6 +16,20 @@ ActiveRecord::Schema.define(version: 20170606053618) do
   enable_extension "plpgsql"
   enable_extension "pgcrypto"
 
+  create_table "game_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "game_id"
+    t.integer "summoner_id"
+    t.string "team"
+    t.integer "champion_id"
+    t.boolean "win"
+    t.integer "kills"
+    t.integer "deaths"
+    t.integer "assists"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_game_participants_on_game_id"
+  end
+
   create_table "games", primary_key: "game_id", force: :cascade do |t|
     t.datetime "create_time"
     t.datetime "created_at", null: false
