@@ -8,9 +8,7 @@ end
 gem 'rails', '~> 5.1.1'
 gem 'pg'
 gem 'passenger'
-
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'active_model_serializers'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
