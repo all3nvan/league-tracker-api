@@ -24,6 +24,30 @@ RSpec.describe RiotApi::Client do
         expect(game.participants).to eq(participants)
       end
     end
+
+    context 'when 500' do
+      it 'raises server error' do
+        stub_request(:any, /.*/).to_return(status: 500)
+
+        expect{ client.get_game(game_id) }.to raise_error(RiotApi::Errors::ServerError)
+      end
+    end
+
+    context 'when 400' do
+      it 'raises client error' do
+        stub_request(:any, /.*/).to_return(status: 400)
+
+        expect{ client.get_game(game_id) }.to raise_error(RiotApi::Errors::ClientError)
+      end
+    end
+
+    context 'when 429' do
+      it 'raises throttled error' do
+        stub_request(:any, /.*/).to_return(status: 429)
+
+        expect{ client.get_game(game_id) }.to raise_error(RiotApi::Errors::ThrottledError)
+      end
+    end
   end
 
   private

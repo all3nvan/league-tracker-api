@@ -12,10 +12,12 @@ module RiotApi
       case response.code
         when 200
           build_game(JSON.parse(response.body))
-        # TODO: handle errors
         when 400..415
+          raise Errors::ClientError, error_message(response)
         when 429
+          raise Errors::ThrottledError, error_message(response)
         when 500..504
+          raise Errors::ServerError, error_message(response)
         else
       end
     end
@@ -45,6 +47,10 @@ module RiotApi
         team: participant_hash['teamId'] == 100 ? 'BLUE' : 'RED',
         champion_id: participant_hash['championId']
       })
+    end
+
+    def error_message(response)
+      "Status: #{response.code}. Message: #{response.message}"
     end
   end
 end
