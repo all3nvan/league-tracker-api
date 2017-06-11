@@ -9,6 +9,7 @@ gem 'rails', '~> 5.1.1'
 gem 'pg'
 gem 'passenger'
 gem 'active_model_serializers'
+gem 'httparty'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -20,6 +21,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.5'
+  gem 'webmock'
 end
 
 group :development do
