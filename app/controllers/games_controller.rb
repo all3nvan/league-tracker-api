@@ -8,7 +8,7 @@ class GamesController < ApplicationController
       render status: :conflict and return
     end
 
-    game_json = ActiveModelSerializers::SerializableResource.new(game, {}).to_json
+    game_json = ActiveModelSerializers::SerializableResource.new(game, {}).as_json
 
     render json: { game: game_json }
   end

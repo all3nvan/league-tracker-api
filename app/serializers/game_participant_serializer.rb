@@ -1,3 +1,5 @@
 class GameParticipantSerializer < ActiveModel::Serializer
-  attributes :summoner_id, :team, :champion_id, :kills, :deaths, :assists
+  attribute :summoner_id, key: :summonerId
+  attribute :champion_id, key: :championId
+  attributes :team, :kills, :deaths, :assists
 end

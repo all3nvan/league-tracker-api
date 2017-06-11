@@ -1,5 +1,5 @@
 class GameSerializer < ActiveModel::Serializer
-  attributes :game_id
+  attribute :game_id, key: :gameId
 
-  has_many :game_participants, serializer: GameParticipantSerializer
+  has_many :game_participants, key: :gameParticipants, serializer: GameParticipantSerializer
 end
