@@ -8,6 +8,10 @@ RSpec.describe RiotApi::Client do
   let(:create_time) { Time.at(1496381604616 / 1000) }
   let(:participants) { build_participants }
 
+  before do
+    WebMock.disable_net_connect!
+  end
+
   describe '#get_game' do
     context 'when successful' do
       it 'returns Game object' do
