@@ -19,11 +19,6 @@ RSpec.describe GameParticipant, type: :model do
       expect(game_participant.errors.keys).to include :champion_id
     end
 
-    it 'requires win' do
-      expect(game_participant).to_not be_valid
-      expect(game_participant.errors.keys).to include :win
-    end
-
     it 'requires kills' do
       expect(game_participant).to_not be_valid
       expect(game_participant.errors.keys).to include :kills
@@ -47,7 +42,7 @@ RSpec.describe GameParticipant, type: :model do
         game: game,
         team: 'BLUE',
         champion_id: 1,
-        win: true,
+        win: false,
         kills: 5,
         deaths: 0,
         assists: 10
