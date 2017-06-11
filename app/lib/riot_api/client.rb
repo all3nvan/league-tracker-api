@@ -29,7 +29,7 @@ module RiotApi
         build_participant(participant_hash)
       end
 
-      Game.new({
+      RiotApi::Game.new({
         game_id: game_hash['gameId'],
         create_time: Time.at(game_hash['gameCreation'] / 1000),
         participants: participants
@@ -39,7 +39,7 @@ module RiotApi
     def build_participant(participant_hash)
       stats = participant_hash['stats']
 
-      Participant.new({
+      RiotApi::Participant.new({
         kills: stats['kills'],
         deaths: stats['deaths'],
         assists: stats['assists'],
