@@ -13,11 +13,11 @@ module RiotApi
         when 200
           build_game(JSON.parse(response.body))
         when 400..415
-          raise Errors::ClientError, error_message(response)
+          raise RiotApi::Errors::ClientError, error_message(response)
         when 429
-          raise Errors::ThrottledError, error_message(response)
+          raise RiotApi::Errors::ThrottledError, error_message(response)
         when 500..504
-          raise Errors::ServerError, error_message(response)
+          raise RiotApi::Errors::ServerError, error_message(response)
         else
       end
     end

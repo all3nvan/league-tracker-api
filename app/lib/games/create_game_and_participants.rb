@@ -4,6 +4,7 @@ module Games
       @game_id = game_id
     end
 
+    # Exceptions from riot api client bubble up
     def call
       validate_uniqueness
       fetch_game
@@ -29,7 +30,6 @@ module Games
     end
 
     def fetch_game
-      # TODO: handle exceptions
       @riot_api_game = riot_api_client.get_game(game_id)
     end
 

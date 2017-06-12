@@ -6,6 +6,12 @@ class GamesController < ApplicationController
       game = Games::CreateGameAndParticipants.new(params[:gameId]).call
     rescue Games::DuplicateGameError
       render status: :conflict and return
+    rescue RiotApi::Errors::ClientError
+      render status: :bad_request and return
+    rescue RiotApi::Errors::ServerError
+      render status: :service_unavailable and return
+    rescue RiotApi::Errors::ThrottledError
+      render status: :too_many_requests and return
     end
 
     game_json = ActiveModelSerializers::SerializableResource.new(game, {}).as_json

@@ -1,8 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe GamesController, type: :controller do
+  let(:create_game_and_participants) { instance_double(Games::CreateGameAndParticipants) }
+  let(:game_id) { 123 }
+
   before do
     request.headers['Content-Type'] = 'application/json'
+
+    allow(Games::CreateGameAndParticipants)
+      .to receive(:new)
+      .with(any_args)
+      .and_return(create_game_and_participants)
   end
 
   describe '#create' do
@@ -21,16 +29,6 @@ RSpec.describe GamesController, type: :controller do
     end
 
     context 'when valid gameId is passed in' do
-      let(:create_game_and_participants) { instance_double(Games::CreateGameAndParticipants) }
-      let(:game_id) { 123 }
-
-      before do
-        allow(Games::CreateGameAndParticipants)
-          .to receive(:new)
-          .with(any_args)
-          .and_return(create_game_and_participants)
-      end
-
       context 'when gameId is new' do
         it 'calls CreateGameAndParticipants and returns game and participant objects' do
           game = Game.new(create_time: DateTime.now, game_id: game_id)
@@ -53,7 +51,9 @@ RSpec.describe GamesController, type: :controller do
 
       context 'when gameId already exists' do
         it' is a 409' do
-          allow(create_game_and_participants).to receive(:call).and_raise(Games::DuplicateGameError)
+          allow(create_game_and_participants)
+            .to receive(:call)
+            .and_raise(Games::DuplicateGameError)
 
           expect(Games::CreateGameAndParticipants).to receive(:new).with(game_id)
           expect(create_game_and_participants).to receive(:call)
@@ -62,6 +62,38 @@ RSpec.describe GamesController, type: :controller do
 
           expect(response.status).to eq(409)
         end
+      end
+    end
+
+    context 'when CreateGameAndParticipants raises error' do
+      it 'is a 400 for client error' do
+        allow(create_game_and_participants)
+          .to receive(:call)
+          .and_raise(RiotApi::Errors::ClientError)
+
+        post :create, params: { gameId: game_id }
+
+        expect(response.status).to eq(400)
+      end
+
+      it 'is a 429 for throttled error' do
+        allow(create_game_and_participants)
+          .to receive(:call)
+          .and_raise(RiotApi::Errors::ThrottledError)
+
+        post :create, params: { gameId: game_id }
+
+        expect(response.status).to eq(429)
+      end
+
+      it 'is a 503 for server error' do
+        allow(create_game_and_participants)
+          .to receive(:call)
+          .and_raise(RiotApi::Errors::ServerError)
+
+        post :create, params: { gameId: game_id }
+
+        expect(response.status).to eq(503)
       end
     end
   end
