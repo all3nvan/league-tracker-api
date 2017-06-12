@@ -19,7 +19,7 @@ module Games
     end
 
     def riot_api_client
-      @riot_api_client ||= RiotApi::Client.new
+      @riot_api_client ||= RiotApi::ThrottledClient.new
     end
 
     def validate_uniqueness

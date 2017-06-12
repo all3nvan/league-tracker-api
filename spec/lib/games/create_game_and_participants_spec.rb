@@ -8,7 +8,7 @@ RSpec.describe Games::CreateGameAndParticipants do
   describe '#call' do
     let(:game_id) { 123 }
     let(:create_game_and_participants) { Games::CreateGameAndParticipants.new(game_id) }
-    let(:riot_api_client) { instance_double(RiotApi::Client) }
+    let(:riot_api_client) { instance_double(RiotApi::ThrottledClient) }
     let(:game_create_time) { 1496381604616 / 1000 }
     let(:riot_api_participants) { create_participants }
     let(:riot_api_game) {
