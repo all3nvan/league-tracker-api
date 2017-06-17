@@ -6,4 +6,5 @@ class GameParticipant < ApplicationRecord
   validates :assists, presence: true
 
   belongs_to :game, foreign_key: :game_id
+  belongs_to :summoner, foreign_key: :summoner_id, optional: true
 end
