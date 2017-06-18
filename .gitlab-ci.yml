@@ -5,7 +5,7 @@ image: "ruby:2.4.1"
 
 stages:
   - test
-  - deploy
+#  - deploy
 
 before_script:
   - ruby -v
@@ -13,7 +13,7 @@ before_script:
   - gem install bundler --no-ri --no-rdoc
   - bundle install --jobs $(nproc)  "${FLAGS[@]}"
 
-rails:
+test:
   stage: test
   script:
   - bundle exec rails db:migrate
@@ -21,10 +21,10 @@ rails:
 
 # This deploy job uses a simple deploy flow to Heroku, other providers, e.g. AWS Elastic Beanstalk
 # are supported too: https://github.com/travis-ci/dpl
-deploy:
-  stage: deploy
-  environment: production
-  script:
-  - ruby -v
+#deploy:
+#  stage: deploy
+#  environment: production
+#  script:
+#  - ruby -v
   #- gem install dpl
   #- dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_PRODUCTION_KEY
