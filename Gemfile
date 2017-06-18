@@ -10,6 +10,7 @@ gem 'pg'
 gem 'passenger'
 gem 'active_model_serializers'
 gem 'httparty'
+gem 'figaro'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

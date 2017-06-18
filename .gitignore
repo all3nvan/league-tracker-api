@@ -16,4 +16,5 @@
 # RubyMine files
 /.idea
 
-config/secrets.yml
+# Ignore application configuration
+/config/application.yml

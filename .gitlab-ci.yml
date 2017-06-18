@@ -16,8 +16,7 @@ before_script:
 rails:
   stage: test
   script:
-  - echo $AWS_RDS_PORT
-  - bundle exec rails db:setup
+  - bundle exec rails db:migrate
   - bundle exec rspec
 
 # This deploy job uses a simple deploy flow to Heroku, other providers, e.g. AWS Elastic Beanstalk

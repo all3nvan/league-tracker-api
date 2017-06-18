@@ -1,6 +1,6 @@
 module RiotApi
   class Client
-    API_KEY = Rails.application.secrets.riot_api_key
+    API_KEY = ENV['RIOT_API_KEY']
     BASE_URL = 'https://na1.api.riotgames.com/lol'
 
     private_constant :API_KEY, :BASE_URL
