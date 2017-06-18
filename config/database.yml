@@ -1,12 +1,15 @@
 default: &default
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= Rails.application.secrets.aws_rds_host %>
+  port: <%= Rails.application.secrets.aws_rds_port %>
+  username: <%= Rails.application.secrets.aws_rds_username %>
+  password: <%= Rails.application.secrets.aws_rds_password %>
   timeout: 5000
 
 development:
   <<: *default
   database: league_matchmaking_development
-  username: postgres
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -14,9 +17,7 @@ development:
 test:
   <<: *default
   database: league_matchmaking_test
-  username: postgres
 
 production:
   <<: *default
   database: league_matchmaking_production
-  username: postgres
