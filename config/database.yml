@@ -1,10 +1,14 @@
 default: &default
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= Rails.application.secrets.aws_rds_host %>
-  port: <%= Rails.application.secrets.aws_rds_port %>
-  username: <%= Rails.application.secrets.aws_rds_username %>
-  password: <%= Rails.application.secrets.aws_rds_password %>
+#  host: <%= Rails.application.secrets.aws_rds_host %>
+#  port: <%= Rails.application.secrets.aws_rds_port %>
+#  username: <%= Rails.application.secrets.aws_rds_username %>
+#  password: <%= Rails.application.secrets.aws_rds_password %>
+  host: <%= ENV.fetch("AWS_RDS_HOST") %>
+  port: <%= ENV.fetch("AWS_RDS_PORT") %>
+  username: <%= ENV.fetch("AWS_RDS_USERNAME") %>
+  password: <%= ENV.fetch("AWS_RDS_PASSWORD") %>
   timeout: 5000
 
 development:
