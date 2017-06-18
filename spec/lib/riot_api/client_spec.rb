@@ -3,16 +3,16 @@ require 'rails_helper'
 RSpec.describe RiotApi::Client do
   let(:client) { RiotApi::Client.new }
 
-  # All of this data is from match_v3_example_response
-  let(:game_id) { 2513935315 }
-  let(:create_time) { Time.at(1496381604616 / 1000) }
-  let(:participants) { build_participants }
-
   before do
     WebMock.disable_net_connect!
   end
 
   describe '#get_game' do
+    # All of this data is from match_v3_example_response
+    let(:game_id) { 2513935315 }
+    let(:create_time) { Time.at(1496381604616 / 1000) }
+    let(:participants) { build_participants }
+
     context 'when successful' do
       it 'returns Game object' do
         stub_request(:any, /.*/)
@@ -50,6 +50,49 @@ RSpec.describe RiotApi::Client do
         stub_request(:any, /.*/).to_return(status: 429)
 
         expect{ client.get_game(game_id) }.to raise_error(RiotApi::Errors::ThrottledError)
+      end
+    end
+  end
+
+  describe '#get_summoner' do
+    let(:name) { 'all3nvan' }
+
+    context 'when successful' do
+      it 'returns Summoner object' do
+        stub_request(:any, /.*/)
+          .to_return(
+            status: 200,
+            body: File.read('./spec/lib/riot_api/summoner_v3_example_response')
+          )
+
+        summoner = client.get_summoner(name)
+
+        expect(summoner.name).to eq(name)
+        expect(summoner.summoner_id).to eq(23472148)
+      end
+    end
+
+    context 'when 500' do
+      it 'raises server error' do
+        stub_request(:any, /.*/).to_return(status: 500)
+
+        expect{ client.get_summoner(name) }.to raise_error(RiotApi::Errors::ServerError)
+      end
+    end
+
+    context 'when 400' do
+      it 'raises client error' do
+        stub_request(:any, /.*/).to_return(status: 400)
+
+        expect{ client.get_summoner(name) }.to raise_error(RiotApi::Errors::ClientError)
+      end
+    end
+
+    context 'when 429' do
+      it 'raises throttled error' do
+        stub_request(:any, /.*/).to_return(status: 429)
+
+        expect{ client.get_summoner(name) }.to raise_error(RiotApi::Errors::ThrottledError)
       end
     end
   end

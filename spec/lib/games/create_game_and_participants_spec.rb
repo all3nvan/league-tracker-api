@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Games::CreateGameAndParticipants do
   before do
-    allow(RiotApi::Client).to receive(:new).and_return(riot_api_client)
+    allow(RiotApi::ThrottledClient).to receive(:new).and_return(riot_api_client)
   end
 
   describe '#call' do

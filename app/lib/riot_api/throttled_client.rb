@@ -5,17 +5,25 @@ module RiotApi
     private_constant :MAX_CALLS_PER_THROTTLING_PERIOD
 
     def get_game(game_id)
-      select_recent_request_times
-      raise RiotApi::Errors::ThrottledError if should_throttle?
-      request_times.push(Time.now)
-
+      throttle_check
       client.get_game(game_id)
+    end
+
+    def get_summoner(name)
+      throttle_check
+      client.get_summoner(name)
     end
 
     private
 
     def client
       @client ||= RiotApi::Client.new
+    end
+
+    def throttle_check
+      select_recent_request_times
+      raise RiotApi::Errors::ThrottledError if should_throttle?
+      request_times.push(Time.now)
     end
 
     def request_times

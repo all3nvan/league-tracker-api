@@ -9,9 +9,22 @@ module RiotApi
       match_url = "#{BASE_URL}/match/v3/matches/#{game_id}"
       response = HTTParty.get(match_url, query: { api_key: API_KEY })
 
+      handle_response(response, method(:build_game))
+    end
+
+    def get_summoner(name)
+      summoner_url = "#{BASE_URL}/summoner/v3/summoners/by-name/#{name}"
+      response = HTTParty.get(summoner_url, query: { api_key: API_KEY })
+
+      handle_response(response, method(:build_summoner))
+    end
+
+    private
+
+    def handle_response(response, response_builder)
       case response.code
         when 200
-          build_game(JSON.parse(response.body))
+          response_builder.call(JSON.parse(response.body))
         when 400..415
           raise RiotApi::Errors::ClientError, error_message(response)
         when 429
@@ -21,8 +34,6 @@ module RiotApi
         else
       end
     end
-
-    private
 
     def build_game(game_hash)
       participants = game_hash['participants'].map do |participant_hash|
@@ -46,6 +57,13 @@ module RiotApi
         win: stats['win'],
         team: participant_hash['teamId'] == 100 ? 'BLUE' : 'RED',
         champion_id: participant_hash['championId']
+      })
+    end
+
+    def build_summoner(summoner_hash)
+      RiotApi::Summoner.new({
+        summoner_id: summoner_hash['id'],
+        name: summoner_hash['name']
       })
     end
 

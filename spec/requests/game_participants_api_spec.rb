@@ -33,7 +33,7 @@ RSpec.describe 'GameParticipants API', type: :request do
       game_participant_json = JSON.parse(response.body)
 
       expect(response.status).to eq(200)
-      expect(game_participant_json['summonerId']).to eq(23472148)
+      expect(game_participant_json['gameParticipant']['summonerId']).to eq(23472148)
     end
   end
 end
