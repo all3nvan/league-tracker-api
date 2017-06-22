@@ -4,7 +4,7 @@
 image: "ruby:2.4.1"
 
 stages:
-  - test
+#  - test
 #  - deploy
 
 before_script:
