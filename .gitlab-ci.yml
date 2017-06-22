@@ -4,7 +4,7 @@
 image: "ruby:2.4.1"
 
 stages:
-#  - test
+  - test
 #  - deploy
 
 before_script:
@@ -13,9 +13,10 @@ before_script:
   - gem install bundler --no-ri --no-rdoc
   - bundle install --jobs $(nproc)  "${FLAGS[@]}"
 
-#test:
-#  stage: test
-#  script:
+test:
+  stage: test
+  script:
+  - echo 'ayy lmao'
 #  - bundle exec rails db:migrate
 #  - bundle exec rspec
 
