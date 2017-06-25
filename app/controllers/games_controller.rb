@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  before_action :authenticate_admin, only: :create
   before_action :validate_post_params, only: :create
 
   def create

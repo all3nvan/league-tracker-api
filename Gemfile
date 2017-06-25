@@ -5,12 +5,13 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.1'
-gem 'pg'
-gem 'passenger'
 gem 'active_model_serializers'
-gem 'httparty'
 gem 'figaro'
+gem 'httparty'
+gem 'knock'
+gem 'passenger'
+gem 'pg'
+gem 'rails', '~> 5.1.1'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

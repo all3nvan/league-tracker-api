@@ -1,4 +1,5 @@
 class GameParticipantsController < ApplicationController
+  before_action :authenticate_admin, only: :update
   before_action :validate_patch_params, only: :update
 
   def update

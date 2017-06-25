@@ -2,9 +2,12 @@ require 'rails_helper'
 
 RSpec.describe GameParticipantsController, type: :controller do
   let(:find_or_create_summoner) { instance_double(Summoners::FindOrCreateSummoner) }
+  let(:admin) { Admin.create(username: 'admin', password: '1') }
+  let(:token) { Knock::AuthToken.new(payload: { sub: admin.id }).token }
 
   before do
     request.headers['Content-Type'] = 'application/json'
+    request.headers['Authorization'] = "Bearer #{token}"
 
     allow(Summoners::FindOrCreateSummoner)
       .to receive(:new)
@@ -13,6 +16,16 @@ RSpec.describe GameParticipantsController, type: :controller do
   end
 
   describe '#update' do
+    context 'when unauthenticated' do
+      it 'is a 401' do
+        request.headers['Authorization'] = ''
+
+        patch :update, params: { id: 123 }
+
+        expect(response.status).to eq(401)
+      end
+    end
+
     describe 'params' do
       context 'when gameParticipant is missing' do
         it 'is a 400' do

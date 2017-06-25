@@ -3,9 +3,12 @@ require 'rails_helper'
 RSpec.describe GamesController, type: :controller do
   let(:create_game_and_participants) { instance_double(Games::CreateGameAndParticipants) }
   let(:game_id) { 123 }
+  let(:admin) { Admin.create(username: 'admin', password: '1') }
+  let(:token) { Knock::AuthToken.new(payload: { sub: admin.id }).token }
 
   before do
     request.headers['Content-Type'] = 'application/json'
+    request.headers['Authorization'] = "Bearer #{token}"
 
     allow(Games::CreateGameAndParticipants)
       .to receive(:new)
@@ -14,6 +17,16 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe '#create' do
+    context 'when unauthenticated' do
+      it 'is a 401' do
+        request.headers['Authorization'] = ''
+
+        post :create
+
+        expect(response.status).to eq(401)
+      end
+    end
+
     context 'when gameId is missing' do
       it 'is a 400' do
         post :create

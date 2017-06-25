@@ -1,7 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'GameParticipants API', type: :request do
-  let(:headers) { { 'CONTENT_TYPE' => 'application/json' } }
+  let(:admin) { Admin.create(username: 'admin', password: '1') }
+  let(:token) { Knock::AuthToken.new(payload: { sub: admin.id }).token }
+  let(:headers) {
+    {
+      'CONTENT_TYPE': 'application/json',
+      'Authorization': "Bearer #{token}"
+    }
+  }
 
   before do
     WebMock.allow_net_connect!
