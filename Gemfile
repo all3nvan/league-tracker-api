@@ -11,6 +11,7 @@ gem 'httparty'
 gem 'knock'
 gem 'pg'
 gem 'puma'
+gem 'rack-timeout'
 gem 'rails', '~> 5.1.1'
 
 # Use Capistrano for deployment
