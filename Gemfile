@@ -9,8 +9,8 @@ gem 'active_model_serializers'
 gem 'figaro'
 gem 'httparty'
 gem 'knock'
-gem 'passenger'
 gem 'pg'
+gem 'puma'
 gem 'rails', '~> 5.1.1'
 
 # Use Capistrano for deployment
