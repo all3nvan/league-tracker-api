@@ -2,12 +2,12 @@ default: &default
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
-  username: postgres
-  password: password
 
 development:
   <<: *default
   database: league_matchmaking_development
+  username: postgres
+  password: password
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -15,15 +15,8 @@ development:
 test:
   <<: *default
   database: league_matchmaking_test
+  username: postgres
+  password: password
 
 production:
   <<: *default
-  url: <%= ENV.fetch("DATABASE_URL") %>
-  database: league_matchmaking_production
-  username: league-matchmaking-api
-  password: <%= ENV.fetch("HEROKU_POSTGRES_PASSWORD") %>
-#  RDS config. Commenting out for now while using Heroku DB config above.
-#  host: <%= ENV.fetch("AWS_RDS_HOST") %>
-#  port: <%= ENV.fetch("AWS_RDS_PORT") %>
-#  username: <%= ENV.fetch("AWS_RDS_USERNAME") %>
-#  password: <%= ENV.fetch("AWS_RDS_PASSWORD") %>
