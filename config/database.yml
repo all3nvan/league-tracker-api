@@ -20,3 +20,4 @@ test:
 
 production:
   <<: *default
+  url: <%= ENV.fetch("HEROKU_POSTGRESQL_OLIVE_URL") %>
