@@ -19,7 +19,10 @@ test:
 production:
   <<: *default
   database: league_matchmaking_production
-  host: <%= ENV.fetch("AWS_RDS_HOST") %>
-  port: <%= ENV.fetch("AWS_RDS_PORT") %>
-  username: <%= ENV.fetch("AWS_RDS_USERNAME") %>
-  password: <%= ENV.fetch("AWS_RDS_PASSWORD") %>
+  username: league-matchmaking-api
+  password: <%= ENV.fetch("HEROKU_POSTGRES_PASSWORD") %>
+#  RDS config. Commenting out for now while using Heroku DB config above.
+#  host: <%= ENV.fetch("AWS_RDS_HOST") %>
+#  port: <%= ENV.fetch("AWS_RDS_PORT") %>
+#  username: <%= ENV.fetch("AWS_RDS_USERNAME") %>
+#  password: <%= ENV.fetch("AWS_RDS_PASSWORD") %>
