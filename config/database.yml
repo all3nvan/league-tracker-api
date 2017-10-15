@@ -18,6 +18,7 @@ test:
 
 production:
   <<: *default
+  url: <%= ENV.fetch("DATABASE_URL") %>
   database: league_matchmaking_production
   username: league-matchmaking-api
   password: <%= ENV.fetch("HEROKU_POSTGRES_PASSWORD") %>
