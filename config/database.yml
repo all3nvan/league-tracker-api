@@ -5,7 +5,7 @@ default: &default
 
 development:
   <<: *default
-  database: league_matchmaking_development
+  database: league-tracker-development
   username: postgres
   password: password
 
@@ -14,10 +14,10 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: league_matchmaking_test
+  database: league-tracker-test
   username: postgres
   password: password
 
 production:
   <<: *default
-  url: <%= ENV.fetch("HEROKU_POSTGRESQL_OLIVE_URL") %>
+  url: <%= ENV["HEROKU_POSTGRESQL_OLIVE_URL"] %>
