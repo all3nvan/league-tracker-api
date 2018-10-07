@@ -96,6 +96,7 @@ GEM
     public_suffix (3.0.3)
     puma (3.12.0)
     rack (2.0.5)
+    rack-cors (1.0.2)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rack-timeout (0.5.1)
@@ -126,6 +127,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    rb-readline (0.5.5)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.1)
@@ -186,8 +188,10 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   pg
   puma
+  rack-cors
   rack-timeout
   rails (~> 5.1.1)
+  rb-readline
   rspec-rails (~> 3.5)
   simplecov
   spring
