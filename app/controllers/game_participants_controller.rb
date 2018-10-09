@@ -13,6 +13,8 @@ class GameParticipantsController < ApplicationController
       render status: :too_many_requests and return
     end
 
+    # TODO: Prob will need to pass in entire object here and do optimistic locking
+    # https://api.rubyonrails.org/classes/ActiveRecord/Locking/Optimistic.html
     game_participant = GameParticipant.find(params[:id])
     game_participant.update(summoner: summoner)
 
