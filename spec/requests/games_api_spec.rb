@@ -21,7 +21,9 @@ RSpec.describe 'Games API', type: :request do
       game_json = JSON.parse(response.body)
 
       expect(response.status).to eq(200)
+      # TODO: Prob should have a test on the Serializer for these instead.
       expect(game_json['game']['gameId']).to eq(2513935315)
+      expect(game_json['game']['createTime']).to eq('2017-06-02T05:33:24.000Z')
       expect(game_json['game']['gameParticipants'].length).to eq(10)
       game_json['game']['gameParticipants'].each do |game_participant|
         expect(game_participant['championId']).to_not be_nil
