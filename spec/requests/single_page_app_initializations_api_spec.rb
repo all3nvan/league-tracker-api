@@ -26,6 +26,8 @@ RSpec.describe 'Single Page App Initializations API', type: :request do
           game: game
         )
       end
+      all_participants = blue_participants + red_participants
+      all_participant_ids = all_participants.map(&:id)
 
       get("/single_page_app_initializations")
 
@@ -33,31 +35,25 @@ RSpec.describe 'Single Page App Initializations API', type: :request do
 
       expect(response.status).to eq(200)
 
+      # Game object
       game_json = response_json['games'][game.game_id.to_s]
       expect(game_json['gameId']).to eq(game.game_id)
+      game_participant_ids_json = game_json['gameParticipantIds']
+      expect(game_participant_ids_json).to match_array(all_participant_ids)
 
-      game_participants_json = game_json['gameParticipants']
-      blue_participants_json = game_participants_json[0..4]
-      red_participants_json = game_participants_json[5..9]
-      (0..4).each do |i|
-        expect(blue_participants_json[i]['summonerId']).to eq(blue_participants[i].summoner_id)
-        expect(blue_participants_json[i]['championId']).to eq(blue_participants[i].champion_id)
-        expect(blue_participants_json[i]['id']).to eq(blue_participants[i].id)
-        expect(blue_participants_json[i]['team']).to eq(blue_participants[i].team)
-        expect(blue_participants_json[i]['kills']).to eq(blue_participants[i].kills)
-        expect(blue_participants_json[i]['deaths']).to eq(blue_participants[i].deaths)
-        expect(blue_participants_json[i]['assists']).to eq(blue_participants[i].assists)
-        expect(blue_participants_json[i]['win']).to eq(blue_participants[i].win)
-      end
-      (0..4).each do |i|
-        expect(red_participants_json[i]['summonerId']).to eq(red_participants[i].summoner_id)
-        expect(red_participants_json[i]['championId']).to eq(red_participants[i].champion_id)
-        expect(red_participants_json[i]['id']).to eq(red_participants[i].id)
-        expect(red_participants_json[i]['team']).to eq(red_participants[i].team)
-        expect(red_participants_json[i]['kills']).to eq(red_participants[i].kills)
-        expect(red_participants_json[i]['deaths']).to eq(red_participants[i].deaths)
-        expect(red_participants_json[i]['assists']).to eq(red_participants[i].assists)
-        expect(red_participants_json[i]['win']).to eq(red_participants[i].win)
+      # Game participants object
+      game_participants_json = response_json['gameParticipants']
+      expect(game_participants_json.size).to eq(all_participants.size)
+      all_participants.each do |participant|
+        expect(game_participants_json[participant.id]['id']).to eq(participant.id)
+        expect(game_participants_json[participant.id]['gameId']).to eq(participant.game_id)
+        expect(game_participants_json[participant.id]['summonerId']).to eq(participant.summoner_id)
+        expect(game_participants_json[participant.id]['championId']).to eq(participant.champion_id)
+        expect(game_participants_json[participant.id]['team']).to eq(participant.team)
+        expect(game_participants_json[participant.id]['kills']).to eq(participant.kills)
+        expect(game_participants_json[participant.id]['deaths']).to eq(participant.deaths)
+        expect(game_participants_json[participant.id]['assists']).to eq(participant.assists)
+        expect(game_participants_json[participant.id]['win']).to eq(participant.win)
       end
     end
   end
