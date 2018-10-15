@@ -15,7 +15,7 @@ RSpec.describe 'Games API', type: :request do
   end
 
   context 'when successful POST' do
-    it 'returns the game as JSON' do
+    it 'returns the game and its participants as JSON' do
       post '/games', params: '{ "gameId": 2513935315 }', headers: headers
 
       response_json = JSON.parse(response.body)
