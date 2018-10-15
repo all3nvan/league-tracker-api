@@ -15,7 +15,7 @@ RSpec.describe 'GameParticipants API', type: :request do
   end
 
   context 'when successful PATCH' do
-    it 'returns the game participant with updated summoner id as JSON' do
+    it 'returns the game participant with updated summoner id and the summoner object as JSON' do
       game_participant = GameParticipant.create(
         team: 'BLUE',
         champion_id: 1,
@@ -37,10 +37,12 @@ RSpec.describe 'GameParticipants API', type: :request do
         headers: headers
       )
 
-      game_participant_json = JSON.parse(response.body)
+      response_json = JSON.parse(response.body)
 
       expect(response.status).to eq(200)
-      expect(game_participant_json['gameParticipant']['summonerId']).to eq(23472148)
+      expect(response_json['gameParticipant']['summonerId']).to eq(23472148)
+      expect(response_json['summoner']['summonerId']).to eq(23472148)
+      expect(response_json['summoner']['name']).to eq('all3nvan')
     end
   end
 end

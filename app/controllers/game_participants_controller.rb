@@ -1,3 +1,4 @@
+# TODO: This should prob be renamed since it updates/returns both participant and summoner.
 class GameParticipantsController < ApplicationController
   before_action :authenticate_admin, only: :update
   before_action :validate_patch_params, only: :update
@@ -21,8 +22,14 @@ class GameParticipantsController < ApplicationController
     game_participant_json = ActiveModelSerializers::SerializableResource
       .new(game_participant, {})
       .as_json
+    summoner_json = ActiveModelSerializers::SerializableResource
+      .new(summoner, {})
+      .as_json
 
-    render json: { gameParticipant: game_participant_json }
+    render json: {
+      gameParticipant: game_participant_json,
+      summoner: summoner_json
+    }
   end
 
   private

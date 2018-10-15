@@ -78,10 +78,16 @@ RSpec.describe GameParticipantsController, type: :controller do
         game_participant_json = ActiveModelSerializers::SerializableResource
           .new(game_participant, {})
           .as_json
+        summoner_json = ActiveModelSerializers::SerializableResource
+          .new(summoner, {})
+          .as_json
 
         expect(game_participant.summoner).to eq(summoner)
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)).to eq({ gameParticipant: game_participant_json }.as_json)
+        expect(JSON.parse(response.body)).to eq({
+          gameParticipant: game_participant_json,
+          summoner: summoner_json
+        }.as_json)
       end
     end
 
