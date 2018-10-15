@@ -49,6 +49,7 @@ RSpec.describe GamesController, type: :controller do
             game.game_participants.new(summoner_id: i, kills: i, deaths: i, assists: i)
           end
           game_json = ActiveModelSerializers::SerializableResource.new(game, {}).as_json
+          game_participants_json = ActiveModelSerializers::SerializableResource.new(game.game_participants, {}).as_json
 
           allow(create_game_and_participants).to receive(:call).and_return(game)
 
@@ -58,7 +59,10 @@ RSpec.describe GamesController, type: :controller do
           post :create, params: { gameId: game_id }
 
           expect(response.status).to eq(200)
-          expect(JSON.parse(response.body)).to eq({ game: game_json }.as_json)
+          expect(JSON.parse(response.body)).to eq({
+            game: game_json,
+            gameParticipants: game_participants_json
+          }.as_json)
         end
       end
 

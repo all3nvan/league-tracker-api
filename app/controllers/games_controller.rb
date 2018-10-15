@@ -1,3 +1,4 @@
+# TODO: This might need to be renamed since it creates and returns both game and participants
 class GamesController < ApplicationController
   before_action :authenticate_admin, only: :create
   before_action :validate_post_params, only: :create
@@ -17,7 +18,10 @@ class GamesController < ApplicationController
 
     game_json = ActiveModelSerializers::SerializableResource.new(game, {}).as_json
 
-    render json: { game: game_json }
+    render json: {
+      game: game_json,
+      gameParticipants: ActiveModelSerializers::SerializableResource.new(game.game_participants, {}).as_json
+    }
   end
 
   private
