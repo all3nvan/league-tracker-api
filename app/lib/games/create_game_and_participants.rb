@@ -25,7 +25,7 @@ module Games
 
     def validate_uniqueness
       if Game.exists?(game_id: game_id)
-        raise DuplicateGameError
+        raise DuplicateGameError, "Game id already exists."
       end
     end
 

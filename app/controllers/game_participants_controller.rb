@@ -6,12 +6,13 @@ class GameParticipantsController < ApplicationController
   def update
     begin
       summoner = Summoners::FindOrCreateSummoner.new(summoner_name).call
-    rescue RiotApi::Errors::ClientError
-      render status: :bad_request and return
-    rescue RiotApi::Errors::ServerError
-      render status: :service_unavailable and return
-    rescue RiotApi::Errors::ThrottledError
-      render status: :too_many_requests and return
+    # TODO: Have some sort of exception interceptor on the way out?
+    rescue RiotApi::Errors::ClientError => e
+      render status: :bad_request, json: { message: e.message } and return
+    rescue RiotApi::Errors::ServerError => e
+      render status: :service_unavailable, json: { message: e.message } and return
+    rescue RiotApi::Errors::ThrottledError => e
+      render status: :too_many_requests, json: { message: e.message } and return
     end
 
     # TODO: Prob will need to pass in entire object here and do optimistic locking
@@ -37,7 +38,7 @@ class GameParticipantsController < ApplicationController
   def validate_patch_params
     unless valid_patch_params?
       render(
-        json: { error: { gameParticipant: 'Required object with summonerName property.' } },
+        json: { message: 'Required object with summonerName property.' },
         status: :bad_request
       )
     end

@@ -6,14 +6,15 @@ class GamesController < ApplicationController
   def create
     begin
       game = Games::CreateGameAndParticipants.new(params[:gameId]).call
-    rescue Games::DuplicateGameError
-      render status: :conflict and return
-    rescue RiotApi::Errors::ClientError
-      render status: :bad_request and return
-    rescue RiotApi::Errors::ServerError
-      render status: :service_unavailable and return
-    rescue RiotApi::Errors::ThrottledError
-      render status: :too_many_requests and return
+    # TODO: Have some sort of exception interceptor on the way out?
+    rescue Games::DuplicateGameError  => e
+      render status: :conflict, json: { message: e.message } and return
+    rescue RiotApi::Errors::ClientError => e
+      render status: :bad_request, json: { message: e.message } and return
+    rescue RiotApi::Errors::ServerError  => e
+      render status: :service_unavailable, json: { message: e.message } and return
+    rescue RiotApi::Errors::ThrottledError  => e
+      render status: :too_many_requests, json: { message: e.message } and return
     end
 
     game_json = ActiveModelSerializers::SerializableResource.new(game, {}).as_json
@@ -30,7 +31,7 @@ class GamesController < ApplicationController
     game_id = params[:gameId]
 
     if game_id.nil? || !game_id.is_a?(Integer)
-      render json: { error: { gameId: 'Required and must be numeric.' } }, status: :bad_request
+      render json: { message: 'Game id required and must be numeric.' }, status: :bad_request
     end
   end
 end
