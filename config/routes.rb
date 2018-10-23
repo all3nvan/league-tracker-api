@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   resources :games, only: :create
   resources :game_participants, only: :update
   resources :admin_token, only: :create
+  resources :auth_checks, only: :index
 end
