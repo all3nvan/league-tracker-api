@@ -29,6 +29,8 @@ RSpec.describe 'Single Page App Initializations API', type: :request do
       all_participants = blue_participants + red_participants
       all_participant_ids = all_participants.map(&:id)
 
+      summoner = Summoner.create(summoner_id: 23472148, name: 'all3nvan')
+
       get("/single_page_app_initializations")
 
       response_json = JSON.parse(response.body)
@@ -55,6 +57,11 @@ RSpec.describe 'Single Page App Initializations API', type: :request do
         expect(game_participants_json[participant.id]['assists']).to eq(participant.assists)
         expect(game_participants_json[participant.id]['win']).to eq(participant.win)
       end
+
+      # Summoners object
+      summoner_json = response_json['summoners'][summoner.summoner_id.to_s]
+      expect(summoner_json['summonerId']).to eq(summoner.summoner_id)
+      expect(summoner_json['name']).to eq(summoner.name)
     end
   end
 end

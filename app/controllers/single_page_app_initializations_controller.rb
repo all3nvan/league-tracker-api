@@ -10,9 +10,15 @@ class SinglePageAppInitializationsController < ApplicationController
       hash[game_participant.id] = ActiveModelSerializers::SerializableResource.new(game_participant, {}).as_json
     end
 
+    summoners = Summoner.all
+    summoner_id_to_json_hash = summoners.each_with_object({}) do |summoner, hash|
+      hash[summoner.summoner_id] = ActiveModelSerializers::SerializableResource.new(summoner, {}).as_json
+    end
+
     render json: {
       games: game_id_to_json_hash,
-      gameParticipants: game_participant_id_to_json_hash
+      gameParticipants: game_participant_id_to_json_hash,
+      summoners: summoner_id_to_json_hash
     }
   end
 end
