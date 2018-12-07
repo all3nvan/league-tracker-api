@@ -29,6 +29,15 @@ RSpec.describe RiotApi::Client do
       end
     end
 
+    context 'when invalid game id' do
+      it 'raises client error' do
+        stub = stub_request(:any, /.*/)
+
+        expect{ client.get_game('a') }.to raise_error(RiotApi::Errors::ClientError)
+        expect(stub).to_not have_been_requested
+      end
+    end
+
     context 'when 500' do
       it 'raises server error' do
         stub_request(:any, /.*/).to_return(status: 500)

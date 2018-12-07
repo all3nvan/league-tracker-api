@@ -6,7 +6,7 @@ module RiotApi
     private_constant :API_KEY, :BASE_URL
 
     def get_game(game_id)
-      match_url = "#{BASE_URL}/match/v3/matches/#{game_id}"
+      match_url = "#{BASE_URL}/match/v3/matches/#{validated_game_id(game_id)}"
       Rails.logger.info "Calling Riot API for URI: #{match_url}"
       response = HTTParty.get(match_url, query: { api_key: API_KEY })
 
@@ -22,6 +22,15 @@ module RiotApi
     end
 
     private
+
+    def validated_game_id(game_id)
+      if game_id.is_a?(Integer)
+        return game_id
+      end
+      error_message = "Game id must be an integer."
+      Rails.logger.warn "#{error_message} Game id: #{game_id}"
+      raise RiotApi::Errors::ClientError, error_message
+    end
 
     def validated_name(name)
       summoner_name_regex = /^[0-9\p{L} _\.]+$/
