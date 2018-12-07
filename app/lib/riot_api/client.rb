@@ -16,7 +16,7 @@ module RiotApi
     def get_summoner(name)
       summoner_url = "#{BASE_URL}/summoner/v3/summoners/by-name/#{name}"
       Rails.logger.info "Calling Riot API for URI: #{summoner_url}"
-      response = HTTParty.get(summoner_url, query: { api_key: API_KEY })
+      response = HTTParty.get(URI.escape(summoner_url), query: { api_key: API_KEY })
 
       handle_response(response, method(:build_summoner))
     end

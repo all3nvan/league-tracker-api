@@ -70,6 +70,19 @@ RSpec.describe RiotApi::Client do
         expect(summoner.name).to eq(name)
         expect(summoner.summoner_id).to eq(23472148)
       end
+
+      it 'escapes URIs' do
+        expected_uri_component = /dat%20hass/
+        stub = stub_request(:get, expected_uri_component)
+          .to_return(
+            status: 200,
+            body: File.read('./spec/lib/riot_api/summoner_v3_example_response')
+          )
+
+        client.get_summoner('dat hass')
+
+        expect(stub).to have_been_requested
+      end
     end
 
     context 'when 500' do
