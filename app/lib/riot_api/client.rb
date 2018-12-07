@@ -14,7 +14,7 @@ module RiotApi
     end
 
     def get_summoner(name)
-      summoner_url = "#{BASE_URL}/summoner/v3/summoners/by-name/#{name}"
+      summoner_url = "#{BASE_URL}/summoner/v3/summoners/by-name/#{validated_name(name)}"
       Rails.logger.info "Calling Riot API for URI: #{summoner_url}"
       response = HTTParty.get(URI.escape(summoner_url), query: { api_key: API_KEY })
 
@@ -22,6 +22,17 @@ module RiotApi
     end
 
     private
+
+    def validated_name(name)
+      summoner_name_regex = /^[0-9\p{L} _\.]+$/
+      first_matching_index = summoner_name_regex =~ name
+      if first_matching_index.nil?
+        error_message = "Invalid summoner name format."
+        Rails.logger.warn "#{error_message} Name: #{name}"
+        raise RiotApi::Errors::ClientError, error_message
+      end
+      name
+    end
 
     def handle_response(response, response_builder)
       case response.code
