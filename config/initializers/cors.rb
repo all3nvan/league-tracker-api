@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'league-tracker-webapp-stage.herokuapp.com'
+    origins ENV['ALLOWED_ORIGIN']
 
     resource '*',
       headers: :any,
