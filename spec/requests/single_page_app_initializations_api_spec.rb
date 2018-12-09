@@ -56,6 +56,7 @@ RSpec.describe 'Single Page App Initializations API', type: :request do
         expect(game_participants_json[participant.id]['deaths']).to eq(participant.deaths)
         expect(game_participants_json[participant.id]['assists']).to eq(participant.assists)
         expect(game_participants_json[participant.id]['win']).to eq(participant.win)
+        expect(game_participants_json[participant.id]['lockVersion']).to eq(participant.lock_version)
       end
 
       # Summoners object
