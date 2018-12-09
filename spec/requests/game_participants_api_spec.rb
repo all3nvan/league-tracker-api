@@ -27,7 +27,8 @@ RSpec.describe 'GameParticipants API', type: :request do
       )
       params = {
         gameParticipant: {
-          summonerName: 'all3nvan'
+          summonerName: 'all3nvan',
+          lockVersion: 0
         }
       }
 

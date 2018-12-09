@@ -15,10 +15,13 @@ class GameParticipantsController < ApplicationController
       render status: :too_many_requests, json: { message: e.message } and return
     end
 
-    # TODO: Prob will need to pass in entire object here and do optimistic locking
-    # https://api.rubyonrails.org/classes/ActiveRecord/Locking/Optimistic.html
     game_participant = GameParticipant.find(params[:id])
-    game_participant.update(summoner: summoner)
+    begin
+      game_participant.update(summoner: summoner, lock_version: lock_version)
+    rescue ActiveRecord::StaleObjectError => e
+      # TODO: Maybe make this message more friendly
+      render status: :conflict, json: { message: e.message } and return
+    end
 
     game_participant_json = ActiveModelSerializers::SerializableResource
       .new(game_participant, {})
@@ -49,10 +52,15 @@ class GameParticipantsController < ApplicationController
     !game_participant.nil? &&
       # TODO: is there a better way to check that this isn't an int/string?
       game_participant.is_a?(ActionController::Parameters) &&
-      !summoner_name.nil?
+      !summoner_name.nil? &&
+      !lock_version.nil?
   end
 
   def summoner_name
     params[:gameParticipant][:summonerName]
+  end
+
+  def lock_version
+    params[:gameParticipant][:lockVersion]
   end
 end

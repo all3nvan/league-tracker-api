@@ -69,7 +69,8 @@ RSpec.describe GameParticipantsController, type: :controller do
           params: {
             id: game_participant.id,
             gameParticipant: {
-              summonerName: summoner_name
+              summonerName: summoner_name,
+              lockVersion: 0
             }
           }
         )
@@ -91,13 +92,56 @@ RSpec.describe GameParticipantsController, type: :controller do
       end
     end
 
+    context 'when game participant is stale' do
+      it 'is a 429' do
+        summoner_id = 111
+        summoner_name = 'asdf'
+        summoner = Summoner.new(summoner_id: summoner_id, name: summoner_name)
+        game_participant = GameParticipant.create(
+          team: 'BLUE',
+          champion_id: 1,
+          kills: 1,
+          deaths: 1,
+          assists: 1,
+          win: true,
+          lock_version: 1,
+          game: Game.create(create_time: Time.now, game_id: 123)
+        )
+
+        allow(find_or_create_summoner).to receive(:call).and_return(summoner)
+
+        patch(
+          :update,
+          params: {
+            id: game_participant.id,
+            gameParticipant: {
+              summonerName: summoner_name,
+              lockVersion: 0
+            }
+          }
+        )
+
+        expect(response.status).to eq(409)
+      end
+    end
+
     context 'when FindOrCreateSummoner raises error' do
+      let(:params) do
+        {
+          id: 1,
+          gameParticipant: {
+            summonerName: 'asdf',
+            lockVersion: 1
+          }
+        }
+      end
+
       it 'is a 400 for client error' do
         allow(find_or_create_summoner)
           .to receive(:call)
           .and_raise(RiotApi::Errors::ClientError)
 
-        patch :update, params: { id: 1, gameParticipant: { summonerName: 'asdf' } }
+        patch :update, params: params
 
         expect(response.status).to eq(400)
       end
@@ -107,7 +151,7 @@ RSpec.describe GameParticipantsController, type: :controller do
           .to receive(:call)
           .and_raise(RiotApi::Errors::ThrottledError)
 
-        patch :update, params: { id: 1, gameParticipant: { summonerName: 'asdf' } }
+        patch :update, params: params
 
         expect(response.status).to eq(429)
       end
@@ -117,7 +161,7 @@ RSpec.describe GameParticipantsController, type: :controller do
           .to receive(:call)
           .and_raise(RiotApi::Errors::ServerError)
 
-        patch :update, params: { id: 1, gameParticipant: { summonerName: 'asdf' } }
+        patch :update, params: params
 
         expect(response.status).to eq(503)
       end
