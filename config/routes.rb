@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   resources :game_participants, only: :update
   resources :admin_token, only: :create
   resources :auth_checks, only: :index
+  resources :ratings, only: :index
 end

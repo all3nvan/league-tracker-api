@@ -13,6 +13,7 @@ gem 'pg'
 gem 'puma'
 gem 'rack-timeout'
 gem 'rails', '~> 5.1.1'
+gem 'trueskill'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
