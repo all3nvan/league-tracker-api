@@ -46,9 +46,24 @@ module Ratings
       end
 
       summoner_id_to_rating.reduce([]) do |arr, (id, rating)|
-        summoner_rating = SummonerRating.new(summoner_id: id, rating: rating.mean - (3 * rating.deviation))
+        summoner_rating = SummonerRating.new(
+          summoner_id: id,
+          rating: rating.mean - (3 * rating.deviation),
+          wins: summoner_wins(id),
+          losses: summoner_losses(id)
+        )
         arr.push(summoner_rating)
       end
+    end
+
+    private
+
+    def summoner_wins(summoner_id)
+      GameParticipant.where(summoner_id: summoner_id, win: true).count
+    end
+
+    def summoner_losses(summoner_id)
+      GameParticipant.where(summoner_id: summoner_id, win: false).count
     end
   end
 end
