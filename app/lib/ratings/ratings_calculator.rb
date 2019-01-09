@@ -1,4 +1,4 @@
-require 'saulabs/trueskill'
+require 'TrueSkill'
 
 module Ratings
   class RatingsCalculator
@@ -18,21 +18,20 @@ module Ratings
 
         winner_ratings = winning_summoner_ids.map do |id|
           unless summoner_id_to_rating.key?(id)
-            summoner_id_to_rating[id] = Saulabs::TrueSkill::Rating.new(25, 8.333)
+            summoner_id_to_rating[id] = Rating.new
           end
           summoner_id_to_rating[id]
         end
         loser_ratings = losing_summoner_ids.map do |id|
           unless summoner_id_to_rating.key?(id)
-            summoner_id_to_rating[id] = Saulabs::TrueSkill::Rating.new(25, 8.333)
+            summoner_id_to_rating[id] = Rating.new
           end
           summoner_id_to_rating[id]
         end
-        graph = Saulabs::TrueSkill::FactorGraph.new([winner_ratings, loser_ratings], [1, 2])
-        graph.update_skills
+        new_ratings = g().transform_ratings([winner_ratings, loser_ratings], [0, 1])
 
-        new_winner_ratings = graph.teams[0]
-        new_loser_ratings = graph.teams[1]
+        new_winner_ratings = new_ratings[0]
+        new_loser_ratings = new_ratings[1]
 
         new_winner_ratings.each_with_index do |rating, i|
           summoner_id = winning_summoner_ids[i]
@@ -48,7 +47,7 @@ module Ratings
       summoner_id_to_rating.reduce([]) do |arr, (id, rating)|
         summoner_rating = SummonerRating.new(
           summoner_id: id,
-          rating: rating.mean - (3 * rating.deviation),
+          rating: rating.exposure,
           wins: summoner_wins(id),
           losses: summoner_losses(id)
         )
