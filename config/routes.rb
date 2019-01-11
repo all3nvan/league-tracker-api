@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   resources :admin_token, only: :create
   resources :auth_checks, only: :index
   resources :ratings, only: :index
+  resources :team_combinations, only: :create
 end
