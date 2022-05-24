@@ -40,4 +40,4 @@ group :test do
   gem 'simplecov'
 end
 
-ruby '2.4.1'
+ruby '2.5.9'
